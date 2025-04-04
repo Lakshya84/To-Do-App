@@ -23,7 +23,7 @@ router.get("/", auth, async (req, res) => {
   try {
     console.log("Fetching todos for user:", req.userId);
     const todos = await Todo.find({ user: req.userId });
-    console.log("Found todos:", todos);
+    // console.log("Found todos:", todos);
     res.status(200).json(todos);
   } catch (error) {
     console.error("Error in GET /todos:", error);
