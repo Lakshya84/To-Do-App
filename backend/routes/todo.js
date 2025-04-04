@@ -21,7 +21,7 @@ router.post("/", auth, async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
   try {
-    console.log("Fetching todos for user:", req.userId);
+    // console.log("Fetching todos for user:", req.userId);
     const todos = await Todo.find({ user: req.userId });
     // console.log("Found todos:", todos);
     res.status(200).json(todos);
