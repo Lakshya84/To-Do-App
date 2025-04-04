@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import React from "react";
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,14 +15,18 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      toast.info('Logging in...', { autoClose: 1000 });
       const response = await axios.post(
         "http://localhost:3000/api/v1/auth/login",
         formData
       );
       localStorage.setItem("token", response.data.token);
+      toast.success('Successfully logged in!');
       navigate("/todos");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      const errorMessage = err.response?.data?.message || "Login failed";
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 

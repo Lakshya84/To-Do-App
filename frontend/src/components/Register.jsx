@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import React from "react";
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      toast.info('Creating your account...', { autoClose: 1000 });
       console.log("Sending registration request:", formData);
       const response = await axios.post(
         "http://localhost:3000/api/v1/auth/register",
@@ -29,13 +31,17 @@ const Register = () => {
       console.log("Registration response:", response.data);
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
+        toast.success('Account created successfully!');
         navigate("/todos");
       } else {
         setError("Registration successful but no token received");
+        toast.warning("Registration successful but no token received");
       }
     } catch (err) {
       console.error("Registration error:", err);
-      setError(err.response?.data?.message || "Registration failed");
+      const errorMessage = err.response?.data?.message || "Registration failed";
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 

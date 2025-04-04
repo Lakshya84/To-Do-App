@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import todoService from "../services/todoService";
 import React from "react";
+import { toast } from "react-toastify";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
@@ -33,8 +34,10 @@ const TodoList = () => {
       const newTodo = await todoService.createTodo(inputValue);
       setTodos([...todos, newTodo]);
       setInputValue("");
+      toast.success('Task added successfully!');
     } catch (err) {
       setError("Failed to create todo");
+      toast.error("Failed to create todo");
     }
   };
 
@@ -51,16 +54,22 @@ const TodoList = () => {
 
   const deleteTodo = async (id) => {
     try {
-      await todoService.deleteTodo(id);
-      setTodos(todos.filter((todo) => todo._id !== id));
+      if (window.confirm("Are you sure you want to delete this task?")) {
+        await todoService.deleteTodo(id);
+        setTodos(todos.filter((todo) => todo._id !== id));
+        toast.success('Task deleted successfully!');
+      }
     } catch (err) {
       setError("Failed to delete todo");
+      toast.error("Failed to delete todo");
     }
   };
 
   const startEditing = (todo) => {
-    setEditingId(todo._id);
-    setEditValue(todo.title);
+    if (window.confirm("Are you sure you want to edit this task?")) {
+      setEditingId(todo._id);
+      setEditValue(todo.title);
+    }
   };
 
   const handleEdit = async (id) => {
@@ -71,14 +80,18 @@ const TodoList = () => {
       });
       setTodos(todos.map((todo) => (todo._id === id ? updatedTodo : todo)));
       setEditingId(null);
+      toast.success('Task updated successfully!');
     } catch (err) {
       setError("Failed to update todo");
+      toast.error("Failed to update todo");
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
+    if (window.confirm("Are you sure you want to logout?")) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
   };
 
   return (
@@ -137,10 +150,13 @@ const TodoList = () => {
                     type="text"
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
-                    onBlur={() => handleEdit(todo._id)}
-                    onKeyPress={(e) =>
-                      e.key === "Enter" && handleEdit(todo._id)
-                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleEdit(todo._id);
+                      } else if (e.key === "Escape") {
+                        setEditingId(null);
+                      }
+                    }}
                     className="flex-1 p-1 border rounded outline-none border-none"
                     autoFocus
                   />
