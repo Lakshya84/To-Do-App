@@ -17,7 +17,6 @@ const Register = () => {
     e.preventDefault();
     try {
       toast.info('Creating your account...', { autoClose: 1000 });
-      console.log("Sending registration request:", formData);
       const response = await axios.post(
         "http://localhost:3000/api/v1/auth/register",
         formData,
@@ -28,7 +27,6 @@ const Register = () => {
           withCredentials: true,
         }
       );
-      console.log("Registration response:", response.data);
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
         toast.success('Account created successfully!');

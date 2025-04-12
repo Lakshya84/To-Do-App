@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import todoService from "../services/todoService";
 import React from "react";
 import { toast } from "react-toastify";
+import images from "../assets/microsoft-to-do-app.png";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
@@ -34,7 +35,7 @@ const TodoList = () => {
       const newTodo = await todoService.createTodo(inputValue);
       setTodos([...todos, newTodo]);
       setInputValue("");
-      toast.success('Task added successfully!');
+      toast.success("Task added successfully!");
     } catch (err) {
       setError("Failed to create todo");
       toast.error("Failed to create todo");
@@ -57,7 +58,7 @@ const TodoList = () => {
       if (window.confirm("Are you sure you want to delete this task?")) {
         await todoService.deleteTodo(id);
         setTodos(todos.filter((todo) => todo._id !== id));
-        toast.success('Task deleted successfully!');
+        toast.success("Task deleted successfully!");
       }
     } catch (err) {
       setError("Failed to delete todo");
@@ -80,7 +81,7 @@ const TodoList = () => {
       });
       setTodos(todos.map((todo) => (todo._id === id ? updatedTodo : todo)));
       setEditingId(null);
-      toast.success('Task updated successfully!');
+      toast.success("Task updated successfully!");
     } catch (err) {
       setError("Failed to update todo");
       toast.error("Failed to update todo");
@@ -95,15 +96,23 @@ const TodoList = () => {
   };
 
   return (
-    <div className="min-h-screen bg-green-100 flex items-center justify-center relative">
+    <div
+      className="min-h-screen flex items-center justify-center relative"
+      style={{
+        backgroundImage: `url(${images})`,
+        backgroundSize: "screen",
+        backgroundPosition: "center",
+        opacity: 0.8,
+      }}
+    >
       <button
         onClick={handleLogout}
-        className="absolute top-4 right-4 px-4 py-2 bg-red-500 text-white rounded font-semibold hover:bg-red-600 cursor-pointer"
+        className="absolute top-4 right-4 px-4 py-2 bg-red-500 text-white rounded font-semibold hover:bg-red-600 cursor-pointer hover:scale-110 hover:shadow-lg transition-transform duration-200"
       >
         Logout
       </button>
 
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6">
+      <div className="max-w-md w-full bg-slate-200 rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">To-Do</h1>
         </div>
@@ -121,11 +130,11 @@ const TodoList = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Add a new todo..."
-              className="flex-1 p-2 border outline-none border-gray-300 rounded"
+              className="flex-1 p-2 border outline-none border-gray-500 rounded"
             />
             <button
               type="submit"
-              className="px-4 py-2 bg-green-500 text-white rounded cursor-pointer font-semibold hover:bg-green-600"
+              className="px-6 py-2 bg-green-500 text-white rounded cursor-pointer font-semibold hover:bg-green-600"
             >
               Add
             </button>
